@@ -23,15 +23,16 @@ function Header(props) {
         href={location.pathname === "/mesto-react" ? "#!" : "/mesto-react"}
         className="button header__logo"
       ></a>
-      <div
-        className={`${
-          isBurgerMenuOpen
-            ? "header__menu-burger_active"
-            : "header__menu-burger"
-        }`}
-        onClick={clickOnBurgerMenu}
-      ></div>
-
+      {props.isLogIn && (
+        <div
+          className={`${
+            isBurgerMenuOpen
+              ? "header__menu-burger_active"
+              : "header__menu-burger"
+          }`}
+          onClick={clickOnBurgerMenu}
+        ></div>
+      )}
       {props.isLogIn ? (
         <div
           className={`header__wrapper-menu ${
