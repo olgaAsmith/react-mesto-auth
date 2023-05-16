@@ -1,7 +1,53 @@
-# Здесь будет ваш проект на Реакте с авторизацией и регистрацией
+------
+------
+# Проект Mesto
 
-Используйте ваши предыдущие наработки по проекту Mesto. Это может быть работа 11-го спринта или его улучшенная версия после 2-х последних спринтов. 
+------
 
-Все запросы на авторизацию, регистрацию и проверку токена должны работать через сервис `https://auth.nomoreparties.co`. Остальные запросы, не относящиеся к этой проектной работе могут быть к бэкенду из предыдущих спринтов.
+#### Github Pages
 
-Успехов!
+*https://olgaasmith.github.io/mesto-react/*
+
+------
+------
+#### О чем?
+
+------
+
+_Проект Mesto - социальная есть, где каждый может поделиться местами, где он когда либо побывал. И каждый сможет насладиться видами этих мест.
+Множество красивейших фотографий тех мест, о которых вы можете узнать и посетить в любой момент._
+
+*Присоединяйся и делись своим Mesto!*
+
+------
+------
+
+#### Что ты получишь?
+------
+1. Уникальный аватар.
+2. Совместная галерея, не только твоих мест, но и твоих друзей, просто знакомых, и конечно же незнакомых.
+3. Неограниченное число мест.
+
+------
+------
+
+# App writing with React
+
+Old project is rewritting by using React.
+
+Adding components and add functions that simplified old app.
+
+Rewrited HTML to JSX and added simple functionality open/close modal windows and getting data from api.
+
+**Using React features: hooks, api, context and refs, app can:**
+
+- create new cards;
+- update user information;
+- change user avatar;
+- like/unlike/delete cards from gallery.
+
+---------------------------------------
+
+**In future it will be more functionality.**
+
+---------------------------------------
