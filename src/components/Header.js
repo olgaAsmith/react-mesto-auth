@@ -1,28 +1,24 @@
-import React from "react";
+import { React, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { Routes, Route, Link } from "react-router-dom";
 
 function Header(props) {
   const location = useLocation();
-  const navigate = useNavigate();
-
-  function signOut() {
-    localStorage.removeItem("jwt");
-    props.handleLogout();
-    navigate("/sign-in", { replace: true });
-  }
 
   //*burger
-  const [isBurgerMenuOpen, SetIsBurgerMenuOpen] = React.useState(false);
+  const [isBurgerMenuOpen, SetIsBurgerMenuOpen] = useState(false);
   const clickOnBurgerMenu = () => {
     SetIsBurgerMenuOpen(!isBurgerMenuOpen);
   };
 
   return (
     <header className="header">
-      <a
-        href={location.pathname === "/mesto-react" ? "#!" : "/mesto-react"}
-        className="button header__logo"
-      ></a>
+      <Routes>
+        <Route
+          path="/*"
+          element={<Link className="button header__logo" to="#!"></Link>}
+        />
+      </Routes>
       {props.isLogIn && (
         <div
           className={`${
@@ -41,18 +37,33 @@ function Header(props) {
         >
           <div className="header__menu">
             <p className="header__menu-email">{props.userEmail}</p>
-            <button className="button header__menu-exit" onClick={signOut}>
+            <button
+              className="button header__menu-exit"
+              onClick={props.onLogout}
+            >
               Выход
             </button>
           </div>
         </div>
       ) : (
-        <a
-          href={location.pathname === "/sign-in" ? "/sign-up" : "/sign-in"}
-          className="button header__sign-in"
-        >
-          {location.pathname === "/sign-in" ? "Регистрация" : "Войти"}
-        </a>
+        <Routes>
+          <Route
+            path="/sign-up"
+            element={
+              <Link className="button header__sign-in" to="/sign-in">
+                Войти
+              </Link>
+            }
+          />
+          <Route
+            path="/sign-in"
+            element={
+              <Link className="button header__sign-in" to="/sign-up">
+                Регистрация
+              </Link>
+            }
+          />
+        </Routes>
       )}
     </header>
   );

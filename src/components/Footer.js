@@ -6,7 +6,10 @@ function Footer() {
   const date = new Date();
   return (
     <footer className="footer">
-      <p className="footer__copyright">{(location.pathname === "/sign-in" || location.pathname === "/sign-up") ? "" : `© ${date.getUTCFullYear()} Mesto Russia`}
+      <p className="footer__copyright">
+        {location.pathname === "/sign-in" || location.pathname === "/sign-up"
+          ? ""
+          : `© ${date.getUTCFullYear()} Mesto Russia`}
       </p>
     </footer>
   );

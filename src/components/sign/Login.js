@@ -1,10 +1,7 @@
-import React from "react";
-import { authorize } from "../../utils/Auth";
-import { useNavigate } from "react-router-dom";
+import { React, useState } from "react";
 
 function Login(props) {
-  const navigate = useNavigate();
-  const [formValue, setFormValue] = React.useState({
+  const [formValue, setFormValue] = useState({
     email: "",
     password: "",
   });
@@ -20,16 +17,8 @@ function Login(props) {
     if (!formValue.email || !formValue.password) {
       return;
     }
-    authorize(formValue.email, formValue.password)
-      .then((data) => {
-        console.log(data);
-        if (data.token) {
-          setFormValue({ email: "", password: "" });
-          props.handleLogin();
-          navigate("/mesto-react", { replace: true });
-        }
-      })
-      .catch((err) => console.log(err));
+    props.onLogin(formValue.email, formValue.password);
+    setFormValue({ email: "", password: "" });
   };
 
   return (

@@ -1,12 +1,12 @@
-import React from "react";
+import {React, useRef, useEffect} from "react";
 import PopupWithForm from "./PopupWithForm";
 
 function AddPlacePopup(props) {
-  const nameNewPlace = React.useRef();
-  const linkNewPlace = React.useRef();
+  const nameNewPlace = useRef();
+  const linkNewPlace = useRef();
 
   //*clean inputs values
-  React.useEffect(() => {
+  useEffect(() => {
     if (props.isOpen) {
       nameNewPlace.current.value = "";
       linkNewPlace.current.value = "";

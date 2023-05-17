@@ -1,10 +1,8 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { registration } from "../../utils/Auth";
+import { React, useState } from "react";
+import { Link } from "react-router-dom";
 
 function Register(props) {
-  const navigate = useNavigate();
-  const [formValue, setFormValue] = React.useState({
+  const [formValue, setFormValue] = useState({
     email: "",
     password: "",
   });
@@ -17,18 +15,10 @@ function Register(props) {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    registration(formValue.email, formValue.password)
-    .then((res) => {
-      if (res.data) {
-        props.handleInfoTooltipClick(true);
-        navigate("/sign-in", { replace: true });
-      } else {
-          props.handleInfoTooltipClick(false);
-      }
-    })
-      .catch((error) => {
-        console.log(error);
-      });
+    if (!formValue.email || !formValue.password) {
+      return;
+    }
+    props.onRegister(formValue.email, formValue.password);
   };
 
   return (
@@ -71,9 +61,9 @@ function Register(props) {
         </button>
         <div className="sign-up__under-text">
           <p className="sign-up__text">Уже зарегистрированы? </p>
-          <a className="button sign-up__link" href="/sign-in">
+          <Link className="button sign-up__link" to="/sign-in">
             Войти
-          </a>
+          </Link>
         </div>
       </form>
     </div>

@@ -1,4 +1,4 @@
-import React from "react";
+import { React, useEffect, useState } from "react";
 import Header from "./Header";
 import Main from "./Main";
 import Footer from "./Footer";
@@ -14,39 +14,39 @@ import Login from "./sign/Login";
 import Register from "./sign/Register";
 import InfoTooltip from "./Popups/InfoTooltip";
 import ProtectedRoute from "./ProtectedRoute";
-import { checkToken } from "../utils/Auth";
+import { authorize, registration, checkToken } from "../utils/Auth";
 
 function App() {
   //*pops
-  const [isEditProfilePopupOpen, SetIsEditProfilePopupOpen] =
-    React.useState(false);
-  const [isAddPlacePopupOpen, SetIsAddPlacePopupOpen] = React.useState(false);
-  const [isEditAvatarPopupOpen, SetIsEditAvatarPopupOpen] =
-    React.useState(false);
-  const [isInfoTooltipOpen, SetIsInfoTooltipOpen] = React.useState(false);
+  const [isEditProfilePopupOpen, SetIsEditProfilePopupOpen] = useState(false);
+  const [isAddPlacePopupOpen, SetIsAddPlacePopupOpen] = useState(false);
+  const [isEditAvatarPopupOpen, SetIsEditAvatarPopupOpen] = useState(false);
+  const [isInfoTooltipOpen, SetIsInfoTooltipOpen] = useState(false);
   //*cards - user
-  const [selectedCard, SetSelectedCard] = React.useState({});
-  const [cards, setCards] = React.useState([]);
-  const [currentUser, setCurrentUser] = React.useState({});
+  const [selectedCard, SetSelectedCard] = useState({});
+  const [cards, setCards] = useState([]);
+  const [currentUser, setCurrentUser] = useState({});
   //*login
-  const [isLogIn, SetIsLogIn] = React.useState(false);
-  const [userEmail, SetUserEmail] = React.useState("");
+  const [isLogIn, SetIsLogIn] = useState(false);
+  const [userEmail, SetUserEmail] = useState("");
   //*navigate
   const navigate = useNavigate();
   //*reg
-  const [isSuccessReg, SetIsSuccessReg] = React.useState(false);
+  const [isSuccessReg, SetIsSuccessReg] = useState(false);
 
   //*get user data
-  React.useEffect(() => {
-    api
-      .getUserData()
-      .then((dataUser) => {
-        setCurrentUser(dataUser);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
+  useEffect(() => {
+    if (isLogIn) {
+      api
+        .getUserData()
+        .then((dataUser) => {
+          setCurrentUser(dataUser);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [isLogIn]);
 
   //*set fsalse open pops
   const closeAllPopup = () => {
@@ -75,16 +75,18 @@ function App() {
   };
 
   //*get list card
-  React.useEffect(() => {
-    api
-      .getCardsData()
-      .then((dataCards) => {
-        setCards([...dataCards]);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
+  useEffect(() => {
+    if (isLogIn) {
+      api
+        .getCardsData()
+        .then((dataCards) => {
+          setCards([...dataCards]);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [isLogIn]);
 
   //*like card
   const handleCardLike = (card) => {
@@ -152,25 +154,57 @@ function App() {
       });
   };
 
-  //*LOGGED ingo
-  const handleLogin = () => {
-    SetIsLogIn(true);
-    handleTokenCheck();
+  //*Registration
+  const handleRegister = (email, pass) => {
+    registration(email, pass)
+      .then((data) => {
+        if (data) {
+          handleInfoTooltipClick(true);
+          navigate("/sign-in", { replace: true });
+        }
+      })
+      .catch((err) => {
+        handleInfoTooltipClick(false);
+        console.log(err);
+      });
   };
+
+  //*LOGIN
+  const handleLogin = (email, pass) => {
+    authorize(email, pass)
+      .then((data) => {
+        if (data.token) {
+          SetIsLogIn(true);
+          SetUserEmail(email);
+          localStorage.setItem("jwt", data.token);
+          navigate("/mesto-react", { replace: true });
+        }
+      })
+      .catch((err) => {
+        SetIsInfoTooltipOpen(true);
+        SetIsSuccessReg(false);
+        console.log(err);
+      });
+  };
+  
+  //*Logout
   const handleLogout = () => {
     SetIsLogIn(false);
+    localStorage.removeItem("jwt");
+    navigate("/sign-in", { replace: true });
   };
 
   //*TOKEN
-  React.useEffect(() => {
+  useEffect(() => {
     handleTokenCheck();
   }, []);
   const handleTokenCheck = () => {
-    if (localStorage.getItem("jwt")) {
-      const jwt = localStorage.getItem("jwt");
+    const jwt = localStorage.getItem("jwt");
+    if (jwt) {
       checkToken(jwt)
         .then((res) => {
           if (res) {
+            console.log(res);
             SetUserEmail(res.data.email);
             SetIsLogIn(true);
             navigate("/", { replace: true });
@@ -187,8 +221,8 @@ function App() {
         <div className="page">
           <Header
             isLogIn={isLogIn}
-            handleLogout={handleLogout}
             userEmail={userEmail}
+            onLogout={handleLogout}
           />
           <Routes>
             <Route
@@ -233,13 +267,13 @@ function App() {
             <Route
               path="/sign-up"
               element={
-                <Register handleInfoTooltipClick={handleInfoTooltipClick} />
+                <Register
+                  handleInfoTooltipClick={handleInfoTooltipClick}
+                  onRegister={handleRegister}
+                />
               }
             />
-            <Route
-              path="/sign-in"
-              element={<Login handleLogin={handleLogin} />}
-            />
+            <Route path="/sign-in" element={<Login onLogin={handleLogin} />} />
           </Routes>
           <Footer />
           //*POPUPS //& edit profile
