@@ -177,7 +177,7 @@ function App() {
           SetIsLogIn(true);
           SetUserEmail(email);
           localStorage.setItem("jwt", data.token);
-          navigate("/mesto-react", { replace: true });
+          navigate("/react-mesto-auth", { replace: true });
         }
       })
       .catch((err) => {
@@ -186,7 +186,7 @@ function App() {
         console.log(err);
       });
   };
-  
+
   //*Logout
   const handleLogout = () => {
     SetIsLogIn(false);
@@ -229,7 +229,7 @@ function App() {
               path="/"
               element={
                 isLogIn ? (
-                  <Navigate to="/mesto-react" replace />
+                  <Navigate to="/react-mesto-auth" replace />
                 ) : (
                   <Navigate to="/sign-in" replace />
                 )
@@ -237,7 +237,7 @@ function App() {
             ></Route>
 
             <Route
-              path="/mesto-react"
+              path="/react-mesto-auth"
               element={
                 <ProtectedRoute
                   element={Main}
