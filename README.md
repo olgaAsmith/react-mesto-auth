@@ -12,7 +12,7 @@
 
 Old JS project is rewrote by using React.
 
-Addcomponents and add functions that simplified old app.
+Add components and add functions that simplified old app.
 
 Changed HTML to JSX and added simple functionality open/close modal windows and getting data from api.
 
